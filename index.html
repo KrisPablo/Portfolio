@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kris Pablo · Virtual Assistant</title>
+
+  <meta
+    name="description"
+    content="Meet Kris E. Pablo, a Virtual Assistant helping with research, administrative support, email management, and social media."
+  >
+
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2040%2040'%3E%3Crect%20width='40'%20height='40'%20rx='12'%20fill='%23f33286'/%3E%3Ctext%20x='20'%20y='28'%20text-anchor='middle'%20font-size='25'%20font-family='Georgia'%20fill='white'%3EK%3C/text%3E%3C/svg%3E"
+  >
+
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+
+  <style>
+    /* Compact portfolio cards with expandable project information. */
+    #portfolio-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+    #portfolio-grid .drive-card { display: flex; flex-direction: column; gap: 18px; min-width: 0; min-height: 340px; padding: 28px; box-sizing: border-box; color: #32222b; background: #fff4f8; border: 1px solid #f4bfd4; border-radius: 24px; animation: portfolio-arrive .55s ease both; animation-delay: var(--card-delay, 0ms); transition: transform .2s ease, box-shadow .2s ease; }
+    #portfolio-grid .drive-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px #c51a6512; }
+    #portfolio-grid .drive-number { color: #c51a65; font-size: .8rem; font-weight: 700; letter-spacing: .08em; }
+    #portfolio-grid .drive-card h3 { margin: 0; min-height: 4.2em; font-size: 1.2rem; line-height: 1.4; overflow-wrap: anywhere; }
+    #portfolio-grid .drive-card p { margin: 0; font-size: .95rem; line-height: 1.7; overflow-wrap: anywhere; }
+    #portfolio-grid .project-client { color: #6a4a59; }
+    #portfolio-grid .project-client strong { color: #32222b; }
+    #portfolio-grid .drive-links { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    #portfolio-grid .drive-links a { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; box-sizing: border-box; padding: 11px 15px; color: #a41450; background: #ffe0ed; border: 1px solid #f5a7c7; border-radius: 12px; font-size: .9rem; font-weight: 700; line-height: 1.5; text-decoration: none; transition: background .2s, color .2s, transform .2s; }
+    #portfolio-grid .drive-links a:hover { color: white; background: #c51a65; border-color: #c51a65; transform: translateY(-2px); }
+    #portfolio-grid .drive-arrow { transition: transform .2s; }
+    #portfolio-grid .drive-links a:hover .drive-arrow { transform: translate(2px, -2px); }
+    #portfolio-grid .project-details { margin-top: auto; border-top: 1px solid #f4bfd4; padding-top: 14px; }
+    #portfolio-grid .project-details > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0; list-style: none; cursor: pointer; color: #a41450; font-size: .9rem; font-weight: 700; }
+    #portfolio-grid .project-details > summary::-webkit-details-marker { display: none; }
+    #portfolio-grid .project-details > summary::after { content: '⌄'; font-size: 1.2rem; transition: transform .2s; }
+    #portfolio-grid .project-details[open] > summary::after { transform: rotate(180deg); }
+    #portfolio-grid .project-details-content { display: grid; gap: 18px; padding-top: 20px; }
+    #portfolio-grid .project-details[open] .project-details-content { animation: portfolio-details-in .25s ease; }
+    #portfolio-grid .project-meta { display: grid; gap: 10px; margin: 0; }
+    #portfolio-grid .meta-row { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 10px; font-size: .9rem; line-height: 1.6; }
+    #portfolio-grid dt { margin: 0; font-weight: 700; }
+    #portfolio-grid dd { margin: 0; overflow-wrap: anywhere; }
+    #portfolio-grid .project-note { color: #6a4a59; font-size: .85rem; font-style: italic; }
+    #portfolio-grid .project-block { display: grid; gap: 8px; }
+    #portfolio-grid .project-block h4 { margin: 0; color: #a41450; font-size: .9rem; }
+    #portfolio-grid .project-skills { display: flex; flex-wrap: wrap; gap: 7px; padding: 0; margin: 0; list-style: none; }
+    #portfolio-grid .project-skills li { padding: 5px 9px; color: #734457; background: #ffe8f1; border: 1px solid #f8cedf; border-radius: 9px; font-size: .78rem; line-height: 1.5; }
+    #portfolio-grid .drive-links a:focus-visible, #portfolio-grid summary:focus-visible { outline: 3px solid #c51a65; outline-offset: 4px; border-radius: 8px; }
+    @keyframes portfolio-arrive { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes portfolio-details-in { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 1000px) { #portfolio-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 640px) { #portfolio-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; } #portfolio-grid .drive-card { padding: 24px; min-height: 0; } #portfolio-grid .drive-card h3 { min-height: 0; } }
+    @media (prefers-reduced-motion: reduce) { #portfolio-grid .drive-card, #portfolio-grid .drive-links a, #portfolio-grid .drive-arrow, #portfolio-grid .project-details > summary::after, #portfolio-grid .project-details[open] .project-details-content { animation: none; transition: none; } #portfolio-grid .drive-card:hover, #portfolio-grid .drive-links a:hover, #portfolio-grid .drive-links a:hover .drive-arrow { transform: none; } }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Navigation -->
+  <header class="nav wrap">
+    <a class="brand" href="#home" aria-label="Kris Pablo home">
+      kris<span>pablo.</span><i>✦</i>
+    </a>
+
+    <nav aria-label="Main navigation">
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#process">My approach</a>
+      <a href="#work">Portfolio</a>
+    </nav>
+
+    <a class="nav-contact" href="mailto:krispablova@gmail.com">
+      Let's talk <span>✦</span>
+    </a>
+  </header>
+
+  <main id="main">
+    <!-- Home -->
+    <section class="hero wrap" id="home">
+      <div class="hero-topline">
+        <p class="eyebrow">KRIS E. PABLO / VIRTUAL ASSISTANT</p>
+        <span>Research • Admin • Social media</span>
+      </div>
+
+      <div class="hero-layout">
+        <div class="hero-copy">
+          <span class="hello-tag">A little help goes a long way.</span>
+
+          <h1>
+            Your next<br>
+            <em>virtual</em><br>
+            assistant<span class="title-dot">.</span>
+          </h1>
+
+          <p class="intro">
+            Hi, I'm Kris. I keep the details organized, the research clear,
+            and your daily tasks moving—so you can focus on your business.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button dark" href="mailto:krispablova@gmail.com">
+              Let's work together <span>✦</span>
+            </a>
+
+            <a class="text-link" href="#work">See my portfolio</a>
+          </div>
+
+          <div class="hero-signature">
+            <span>Kris Pablo</span>
+            <small>Your support, behind the scenes.</small>
+          </div>
+        </div>
+
+        <div class="workspace-art">
+          <div class="workspace-window tilt">
+            <div class="window-bar">
+              <div class="window-dots">
+                <i></i>
+                <i></i>
+                <i></i>
+              </div>
+
+              <span>the support studio</span>
+              <span>✦</span>
+            </div>
+
+            <div class="workspace-main">
+              <div class="profile-strip">
+                <img
+                  src="resume-image-000.jpg"
+                  alt="Kris E. Pablo"
+                  width="432"
+                  height="389"
+                >
+
+                <div>
+                  <p>MEET YOUR ASSISTANT</p>
+                  <h2>Kris Pablo</h2>
+                  <span>Thoughtful support. Personal touch.</span>
+                </div>
+              </div>
+
+              <div class="workspace-heading">
+                <h3>What I can take off your plate</h3>
+                <span>4 areas of support</span>
+              </div>
+
+              <div class="task-row">
+                <span class="task-check">✓</span>
+
+                <div>
+                  <strong>Find the right information</strong>
+                  <small>Research &amp; profile sourcing</small>
+                </div>
+
+                <span class="task-label">RESEARCH</span>
+              </div>
+
+              <div class="task-row">
+                <span class="task-check">✓</span>
+
+                <div>
+                  <strong>Keep the details in order</strong>
+                  <small>Documents &amp; presentations</small>
+                </div>
+
+                <span class="task-label">ADMIN</span>
+              </div>
+
+              <div class="task-row">
+                <span class="task-check">✓</span>
+
+                <div>
+                  <strong>Support daily communication</strong>
+                  <small>Email &amp; social media</small>
+                </div>
+
+                <span class="task-label">SUPPORT</span>
+              </div>
+
+              <div class="workspace-foot">
+                <span>Careful work, from start to finish.</span>
+                <span>✦</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="desk-badge">
+            <span>Less busywork.</span>
+            <strong>More breathing room.</strong>
+          </div>
+
+          <div class="orb orb-one"></div>
+          <div class="orb orb-two"></div>
+
+          <span class="workspace-star" aria-hidden="true">✦</span>
+        </div>
+      </div>
+
+      <div class="hero-bottom">
+        <span>Built on organization. Backed by clear communication.</span>
+
+        <a
+          href="kris-pablo-resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Read my resume ⤢
+        </a>
+      </div>
+    </section>
+
+    <!-- Ribbon -->
+    <div class="ribbon" aria-hidden="true">
+      <div>
+        RESEARCH &amp; ORGANIZATION <span>✦</span>
+        ADMINISTRATIVE SUPPORT <span>✦</span>
+        SOCIAL MEDIA <span>✦</span>
+        CLEAR COMMUNICATION <span>✦</span>
+        RESEARCH &amp; ORGANIZATION <span>✦</span>
+        ADMINISTRATIVE SUPPORT <span>✦</span>
+        SOCIAL MEDIA <span>✦</span>
+        CLEAR COMMUNICATION <span>✦</span>
+      </div>
+    </div>
+
+    <!-- About -->
+    <section class="about wrap section reveal" id="about">
+      <div>
+        <p class="eyebrow">01 / THE PERSON BEHIND THE DETAILS</p>
+        <h2>A real person.<br><em>A reliable partner.</em></h2>
+      </div>
+
+      <div class="about-copy">
+        <p class="lead">
+          I'm Kris, a Virtual Assistant with experience supporting talent
+          research and keeping information beautifully organized.
+        </p>
+
+        <p>
+          At Esprit Casting, I research Instagram profiles of models and
+          actors, collect their profile links and photos, and organize
+          everything into shared Google Slides presentations. I value
+          clear communication, careful work, and reliable delivery with
+          minimal supervision.
+        </p>
+
+        <div class="about-tags">
+          <span>Detail-oriented</span>
+          <span>Organized</span>
+          <span>Clear communicator</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services-section" id="services">
+      <div class="wrap section services-layout">
+        <div class="service-intro reveal">
+          <p class="eyebrow">02 / YOUR SUPPORT MENU</p>
+
+          <h2>
+            What would you<br>
+            like to <em>hand over?</em>
+          </h2>
+
+          <p>
+            The day-to-day details deserve attention.<br>
+            I'll help you give them exactly that.
+          </p>
+
+          <a class="text-link" href="mailto:krispablova@gmail.com">
+            Let's discuss your needs
+          </a>
+
+          <div class="service-stamp">
+            <span>KRIS PABLO</span>
+            <strong>here to<br>help.</strong>
+            <span>VIRTUAL ASSISTANT</span>
+          </div>
+        </div>
+
+        <div class="service-list">
+          <details class="service-detail reveal" open>
+            <summary>
+              <span class="service-index">01</span>
+              <span>Research &amp; organization</span>
+              <span class="detail-plus" aria-hidden="true">+</span>
+            </summary>
+
+            <div class="service-content">
+              <p>
+                Find useful information and bring it together in a format
+                that's easy to review. My casting research experience
+                includes finding model and actor profiles, gathering links
+                and photos, and preparing shared presentations.
+              </p>
+
+              <div class="service-pills">
+                <span>Profile research</span>
+                <span>Information gathering</span>
+                <span>Google Slides</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="service-detail reveal">
+            <summary>
+              <span class="service-index">02</span>
+              <span>Administrative support</span>
+              <span class="detail-plus" aria-hidden="true">+</span>
+            </summary>
+
+            <div class="service-content">
+              <p>
+                Support for daily administrative tasks and neatly organized
+                documents, spreadsheets, and presentations using Microsoft
+                Word, Excel, and PowerPoint.
+              </p>
+
+              <div class="service-pills">
+                <span>Documents</span>
+                <span>Spreadsheets</span>
+                <span>Presentations</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="service-detail reveal">
+            <summary>
+              <span class="service-index">03</span>
+              <span>Email management</span>
+              <span class="detail-plus" aria-hidden="true">+</span>
+            </summary>
+
+            <div class="service-content">
+              <p>
+                Help organizing your email and keeping daily communication
+                clear and manageable, with attention to the details that
+                need your follow-up.
+              </p>
+
+              <div class="service-pills">
+                <span>Inbox organization</span>
+                <span>Communication support</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="service-detail reveal">
+            <summary>
+              <span class="service-index">04</span>
+              <span>Social media support</span>
+              <span class="detail-plus" aria-hidden="true">+</span>
+            </summary>
+
+            <div class="service-content">
+              <p>
+                Support with social media management, informed by social
+                media marketing training and familiarity with Facebook,
+                X, and LinkedIn.
+              </p>
+
+              <div class="service-pills">
+                <span>Facebook</span>
+                <span>X</span>
+                <span>LinkedIn</span>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio -->
+    <section class="wrap section work-section" id="work">
+      <div class="section-heading reveal">
+        <div>
+          <p class="eyebrow">03 / THE PORTFOLIO</p>
+          <h2>The work, <em>up close.</em></h2>
+        </div>
+      </div>
+
+      <!-- The script below creates your six portfolio cards here. -->
+      <div class="work-grid" id="portfolio-grid"></div>
+    </section>
+
+    <!-- Process -->
+    <section class="process-section" id="process">
+      <div class="wrap section">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow">04 / A SIMPLE WAY TO WORK TOGETHER</p>
+
+            <h2>
+              From your to-do list<br>
+              <em>to a clear next step.</em>
+            </h2>
+          </div>
+
+          <p>No guesswork.<br>Just a thoughtful process.</p>
+        </div>
+
+        <div class="process-grid">
+          <article class="process-card reveal">
+            <span class="process-number">01</span>
+            <h3>Let's get aligned.</h3>
+
+            <p>
+              We talk through your goals, priorities, and the details you
+              need help with.
+            </p>
+
+            <span class="process-foot">UNDERSTAND THE BRIEF</span>
+          </article>
+
+          <article class="process-card reveal">
+            <span class="process-number">02</span>
+            <h3>I organize the work.</h3>
+
+            <p>
+              I gather the information, structure the tasks, and keep the
+              work easy to follow.
+            </p>
+
+            <span class="process-foot">RESEARCH &amp; PREPARE</span>
+          </article>
+
+          <article class="process-card reveal">
+            <span class="process-number">03</span>
+            <h3>You stay in the loop.</h3>
+
+            <p>
+              You receive clear communication and organized results to
+              review together.
+            </p>
+
+            <span class="process-foot">COMMUNICATE &amp; DELIVER</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="skills-section wrap section">
+      <div class="skill-title reveal">
+        <p class="eyebrow">05 / MY EVERYDAY TOOLKIT</p>
+
+        <h2>
+          Organized by nature.<br>
+          <em>Equipped to help.</em>
+        </h2>
+      </div>
+
+      <div class="skill-bento">
+        <article class="skill-tile skill-wide reveal">
+          <span class="tile-label">DOCUMENTS, DATA &amp; DECKS</span>
+          <h3>Microsoft Office</h3>
+
+          <p>
+            Word for documents. Excel for spreadsheets.<br>
+            PowerPoint for presentations.
+          </p>
+
+          <div class="tool-icons">
+            <span>W<small>Word</small></span>
+            <span>X<small>Excel</small></span>
+            <span>P<small>PowerPoint</small></span>
+          </div>
+        </article>
+
+        <article class="skill-tile skill-slides reveal">
+          <span class="tile-label">INFORMATION, WELL PRESENTED</span>
+          <h3>Google Slides</h3>
+
+          <p>
+            Shared presentations that bring profile links, photos, and
+            research together.
+          </p>
+
+          <span class="tile-mark" aria-hidden="true">▤</span>
+        </article>
+
+        <article class="skill-tile skill-social reveal">
+          <span class="tile-label">SOCIAL PLATFORM FAMILIARITY</span>
+          <h3>Facebook · X · LinkedIn</h3>
+
+          <p>
+            Social media support with a practical understanding of the
+            platforms.
+          </p>
+        </article>
+
+        <article class="skill-tile skill-human reveal">
+          <span class="tile-label">THE PERSONAL PART</span>
+          <h3>Clear communication.<br>Careful attention.</h3>
+          <p>Quality work with minimal supervision.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="experience-section">
+      <div class="wrap section experience">
+        <div class="reveal">
+          <p class="eyebrow">06 / EXPERIENCE &amp; LEARNING</p>
+          <h2>A foundation<br><em>you can rely on.</em></h2>
+
+          <p class="experience-intro">
+            Hands-on research experience, supported by training in virtual
+            assistance and social media marketing.
+          </p>
+
+          <div class="tools">
+            <span>Word</span>
+            <span>Excel</span>
+            <span>PowerPoint</span>
+            <span>Google Slides</span>
+          </div>
+        </div>
+
+        <div class="timeline reveal">
+          <article>
+            <p class="timeline-date">
+              JUNE 2023 – PRESENT · 
+            </p>
+
+            <h3>Virtual Assistant</h3>
+            <p class="company">Esprit Casting</p>
+
+            <p>
+              Talent profile research, photo collection, and organized
+              shared presentations.
+            </p>
+          </article>
+
+          <article>
+            <p class="timeline-date">OCTOBER 16, 2022</p>
+            <h3>Virtual Assistant Training</h3>
+            <p>VA Training Philippines</p>
+          </article>
+
+          <article>
+            <p class="timeline-date">JANUARY 13, 2022</p>
+            <h3>Social Media Marketing Management</h3>
+            <p>Freelance Academy Virtual Assistant Training</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact wrap section reveal" id="contact">
+      <p class="eyebrow">LESS ON YOUR PLATE. MORE IN YOUR DAY.</p>
+
+      <h2>
+        Your business.<br>
+        <em>My helping hand.</em> <span>✦</span>
+      </h2>
+
+      <p>
+        Have a project or need an extra pair of hands?<br>
+        I'd love to hear how I can help.
+      </p>
+
+      <a class="button dark" href="mailto:krispablova@gmail.com">
+        Say hello <span>✦</span>
+      </a>
+
+      <a class="contact-email" href="mailto:krispablova@gmail.com">
+        krispablova@gmail.com
+      </a>
+
+      <div class="contact-extra">
+        <a
+          href="https://www.onlinejobs.ph/jobseekers/info/2065171"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          OnlineJobs.ph profile
+        </a>
+
+        <a href="tel:+639055662839">+63 905 566 2839</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="wrap">
+    <a class="brand" href="#home">kris<span>pablo.</span></a>
+    <p>Thoughtful support. Personal touch.</p>
+    <span>© <span id="year"></span> Kris E. Pablo</span>
+  </footer>
+
+  <script>
+    // All project details are below. Drive links open in new tabs.
+    const drivePortfolio = [
+      {
+            "title": "Project 1 — Instagram Influencer Research & Database",
+            "client": "Luna & Co. Beauty",
+            "note": "Self-Initiated Portfolio Project",
+            "tools": "Google Sheets, Google Slides, Instagram, Web Research",
+            "role": "Virtual Assistant / Research Assistant",
+            "summary": "Conducted Instagram influencer research for a fictional beauty brand, identifying and evaluating potential creators based on niche relevance, audience size, content quality, engagement, and brand suitability. Organized research findings in Google Sheets and presented the top creator recommendations in Google Slides.",
+            "skills": [
+                  "Research",
+                  "Data Entry",
+                  "Lead Generation",
+                  "Social Media Research",
+                  "Data Organization",
+                  "Influencer Research",
+                  "Google Workspace",
+                  "Presentation Creation"
+            ],
+            "url": "https://docs.google.com/spreadsheets/d/1-x0qH4hSnOkntNJcdVgHy6CgaXar356vidMN7ef_sSc/edit?usp=drive_link",
+            "url2": "https://docs.google.com/presentation/d/1_N2ZjwVFHI_hTWP_O1Agqk-pIT8-UCxtIyYA6XxkBPk/edit?usp=sharing"
+      },
+      {
+            "title": "Project 2 — Client Database Management",
+            "client": "BrightPath Consulting",
+            "note": "Self-Initiated Portfolio Project",
+            "brief": "BrightPath Consulting needs a centralized database to organize leads and track follow-ups.",
+            "summary": "Created and organized a structured lead database using Google Sheets. Implemented dropdown fields, filtering, conditional formatting, follow-up tracking, and basic reporting to improve data organization and workflow efficiency.",
+            "skills": [
+                  "Data Entry",
+                  "Data Organization",
+                  "Lead and client database management",
+                  "Dropdown setup and data validation",
+                  "Data filtering and conditional formatting",
+                  "Follow-up tracking",
+                  "Basic reporting",
+                  "Attention to detail"
+            ],
+            "url": "https://docs.google.com/spreadsheets/d/1M3qek1lUn7KgAmw8EK7Gs0UofvUdNsCdyt2rf3sMQ_U/edit?usp=drive_link"
+      },
+      {
+            "title": "Project 3 — 30-Day Instagram Content Calendar",
+            "client": "Luna & Co. Beauty",
+            "note": "Self-Initiated Portfolio Project",
+            "brief": "Luna & Co. Beauty needs a structured 30-day Instagram content plan to increase brand awareness, engagement, and product discovery.",
+            "summary": "Created a 30-day Instagram content calendar for a fictional beauty brand. Planned and organized daily content based on different content pillars, including product, educational, engagement, lifestyle, UGC/testimonials, and behind-the-scenes content. Developed post ideas, captions/hooks, CTAs, content formats, and posting status to create a structured and easy-to-manage social media workflow.",
+            "skills": [
+                  "Content Planning",
+                  "Social Media Management",
+                  "Content Strategy",
+                  "Copywriting",
+                  "Calendar Management",
+                  "Data Organization",
+                  "Google Sheets",
+                  "Instagram Marketing",
+                  "Attention to Detail"
+            ],
+            "url": "https://docs.google.com/spreadsheets/d/1n8tDvQTzEjdHyqA8pszUbvALMUwDfTAZmgz6JWpmcG8/edit?usp=drive_link"
+      },
+      {
+            "title": "Project 4 — Email & Calendar Management System",
+            "client": "Bloom Digital Studio",
+            "note": "Self-Initiated Portfolio Project",
+            "role": "Virtual Assistant",
+            "tools": "Google Sheets, Google Calendar",
+            "summary": "Created a centralized email, calendar, and task management system using Google Sheets. Organized email communications, scheduled appointments, tracked follow-ups and deadlines, and created summary dashboards to improve visibility and workflow organization.",
+            "skills": [
+                  "Email Management",
+                  "Calendar Management",
+                  "Data Entry",
+                  "Task Tracking",
+                  "Follow-Up Management",
+                  "Data Organization",
+                  "Google Sheets",
+                  "Administrative Support",
+                  "Workflow Management"
+            ],
+            "url": "https://docs.google.com/spreadsheets/d/1hsX-0mJNpRmolndwzhGRmNwfWATav0J93sHUP5aG6XI/edit?usp=drive_link"
+      },
+      {
+            "title": "Project 5 — Lead Generation & Prospect Research",
+            "client": "FreshGlow Digital",
+            "note": "Self-Initiated Portfolio Project",
+            "role": "Virtual Assistant",
+            "tools": "Google Sheets, Google Search, LinkedIn, Business Directories",
+            "summary": "Created a structured lead generation and prospect research tracker using Google Sheets. Researched potential business leads, organized company and contact information, identified service opportunities, and tracked lead quality, outreach status, and follow-up dates.",
+            "skills": [
+                  "Lead Generation",
+                  "Prospect Research",
+                  "Web Research",
+                  "Data Entry",
+                  "Data Organization",
+                  "Lead Tracking",
+                  "Follow-Up Management",
+                  "Google Sheets",
+                  "Attention to Detail",
+                  "Administrative Support"
+            ],
+            "url": "https://docs.google.com/spreadsheets/d/1nKfT61uQANkGPBo70VDPqIl81KysgQTycKB6HglRm_w/edit?usp=drive_link"
+      },
+      {
+            "title": "Project 6 — Monthly Social Media Performance Report",
+            "client": "Bloom Digital Studio",
+            "note": "Self-Initiated Portfolio Project",
+            "role": "Virtual Assistant",
+            "tools": "Google Sheets",
+            "summary": "Created a monthly social media performance report to organize and analyze content performance, engagement, reach, impressions, and audience growth. Built summary tables to provide a clear overview of social media results and support client reporting.",
+            "skills": [
+                  "Social Media Reporting",
+                  "Data Entry",
+                  "Data Organization",
+                  "Basic Analytics",
+                  "Performance Tracking",
+                  "Google Sheets",
+                  "Reporting",
+                  "Data Analysis"
+            ],
+            "url": "https://docs.google.com/spreadsheets/d/1X3r11MF9_JA8YyXLACgt0q78PMfoXI1j4_h_a-0GKe8/edit?usp=drive_link"
+      }
+];
+    const driveGrid = document.getElementById("portfolio-grid");
+    driveGrid.replaceChildren();
+
+    function portfolioElement(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+      return element;
+    }
+
+    drivePortfolio.forEach((project, index) => {
+      const card = portfolioElement("article", "drive-card");
+      card.style.setProperty("--card-delay", (index * 65) + "ms");
+      const title = portfolioElement("h3", "", project.title.replace(/^Project \d+ — /, ""));
+      title.id = "portfolio-title-" + (index + 1);
+      card.setAttribute("aria-labelledby", title.id);
+      const client = portfolioElement("p", "project-client");
+      client.append(portfolioElement("strong", "", "Client: "), document.createTextNode(project.client));
+      card.append(portfolioElement("span", "drive-number", "PROJECT " + String(index + 1).padStart(2, "0")), title, client);
+
+      const actions = portfolioElement("div", "drive-links");
+      [project.url, project.url2].forEach((value, linkIndex) => {
+        const url = (value || "").trim();
+        try { if (new URL(url).protocol !== "https:") return; } catch { return; }
+        const link = portfolioElement("a", "", "View on Google Drive");
+        const arrow = portfolioElement("span", "drive-arrow", "↗");
+        arrow.setAttribute("aria-hidden", "true");
+        link.append(arrow);
+        link.href = url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.setAttribute("aria-label", project.title + ", work sample " + (linkIndex + 1) + " — opens in a new tab");
+        actions.append(link);
+      });
+      card.append(actions);
+
+      const details = portfolioElement("details", "project-details");
+      const toggle = portfolioElement("summary", "", "Details & summary");
+      const content = portfolioElement("div", "project-details-content");
+      if (project.note) content.append(portfolioElement("p", "project-note", project.note));
+      const meta = portfolioElement("dl", "project-meta");
+      [["Role", project.role], ["Tools", project.tools]].forEach(([label, value]) => {
+        if (!value) return;
+        const row = portfolioElement("div", "meta-row");
+        row.append(portfolioElement("dt", "", label + ":"), portfolioElement("dd", "", value));
+        meta.append(row);
+      });
+      if (meta.children.length) content.append(meta);
+      [["Client Brief", project.brief], ["Project Summary", project.summary]].forEach(([label, value]) => {
+        if (!value) return;
+        const block = portfolioElement("div", "project-block");
+        block.append(portfolioElement("h4", "", label), portfolioElement("p", "", value));
+        content.append(block);
+      });
+      if (project.skills && project.skills.length) {
+        const block = portfolioElement("div", "project-block");
+        const skills = portfolioElement("ul", "project-skills");
+        project.skills.forEach(skill => skills.append(portfolioElement("li", "", skill)));
+        block.append(portfolioElement("h4", "", "Skills Demonstrated"), skills);
+        content.append(block);
+      }
+      details.append(toggle, content);
+      card.append(details);
+      driveGrid.append(card);
+    });
+  </script>
+</body>
+</html>

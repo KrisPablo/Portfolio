@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Portfolio · Kris Pablo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2040%2040'%3E%3Crect%20width='40'%20height='40'%20rx='12'%20fill='%23ed2f83'/%3E%3Ctext%20x='20'%20y='28'%20text-anchor='middle'%20font-size='25'%20font-family='Georgia'%20fill='white'%3EK%3C/text%3E%3C/svg%3E">
+  </head>
+  <body>
+    <header class="nav wrap">
+      <a class="brand" href="index.html">kris<span>pablo.</span><i>✦</i></a>
+      <a href="index.html#work">Back to portfolio</a>
+    </header>
+    <main class="contact wrap section">
+      <p class="eyebrow" id="slot">PORTFOLIO</p>
+      <h1>Good things<br><em class="pink-word">are on their way.</em></h1>
+      <p>This project hasn't been added yet.<br>Come back soon to see what's new.</p>
+      <a class="button dark" href="mailto:krispablova@gmail.com">Get in touch <span>✦</span></a>
+    </main>
+    <script>const n=Number(new URLSearchParams(location.search).get('slot'));if(n>=1&&n<=6)document.getElementById('slot').textContent='PORTFOLIO '+String(n).padStart(2,'0');</script>
+  </body>
+</html>
